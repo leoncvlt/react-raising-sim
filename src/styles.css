@@ -1,0 +1,10 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  background: gray;
+  padding: 2rem;
+}
+
+* {
+  font-family: "MS Gothic", Menlo, sans-serif;
+}

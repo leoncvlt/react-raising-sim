@@ -1,0 +1,10 @@
+start:
+  - Hello world!
+  - This is a message box
+  - $choice:
+      pickFirst:
+        - See you later!
+      pickSecond:
+        - Farewell!
+      doItAgain:
+        - $goto: start
