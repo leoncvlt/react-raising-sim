@@ -1,0 +1,11 @@
+name: "Chelle"
+day: 1
+money: 500
+stats:
+  stress: 0
+  constitution: 0
+  strength: 0
+  intelligence: 0
+  elegance: 0
+  charisma: 0
+  morality: 0

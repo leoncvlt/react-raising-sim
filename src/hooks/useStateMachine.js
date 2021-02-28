@@ -24,14 +24,14 @@ export const useStateMachine = (initialState) => {
   };
 
   const onStateEnter = (state, callback) => {
-    if (_onStateEnter[state] == null || _onStateEnter.length == 0) {
+    if (_onStateEnter[state] == null || _onStateEnter.length === 0) {
       _onStateEnter[state] = [];
     }
     _onStateEnter[state].push(callback);
   };
 
   const onStateExit = (state, callback) => {
-    if (_onStateExit[state] == null || _onStateExit.length == 0) {
+    if (_onStateExit[state] == null || _onStateExit.length === 0) {
       _onStateExit[state] = [];
     }
     _onStateExit[state].push(callback);

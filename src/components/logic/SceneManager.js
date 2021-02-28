@@ -3,11 +3,15 @@ import { useEffect, useState } from "react";
 import AdventureScene from "../../scenes/AdventureScene";
 import ChatSubScene from "../../scenes/ChatSubScene";
 import ManagementScene from "../../scenes/ManagementScene";
+import { StatsSubScene } from "../../scenes/StatsSubScene";
+import WorkSubScene from "../../scenes/WorkSubScene";
 
 const SCENES = {
   ManagementScene: ManagementScene,
   ChatSubScene: ChatSubScene,
-  AdventureScene: AdventureScene
+  AdventureScene: AdventureScene,
+  WorkSubScene: WorkSubScene,
+  StatsSubScene: StatsSubScene
 };
 
 const GameScene = ({ scene, onOpen, onClose, ...rest }) => {

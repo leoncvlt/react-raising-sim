@@ -1,18 +1,29 @@
-import React, { useReducer, useEffect } from "react";
+import yaml from "js-yaml";
+import React, { useReducer } from "react";
+import initialState from "../data/state.yaml";
 
 export const GameContext = React.createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "increment_money":
-      return { ...state, money: state.money + 1 };
+    case "CHANGE_MONEY":
+      return { ...state, money: state.money + action.payload.value };
+    case "CHANGE_STAT":
+      return {
+        ...state,
+        stats: {
+          ...state.stats,
+          [action.payload.stat]:
+            state.stats[action.payload.stat] + action.payload.value
+        }
+      };
     default:
       throw new Error("Unknown reducer action");
   }
 };
 
 export const GameProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, { money: 0, day: 1 });
+  const [state, dispatch] = useReducer(reducer, yaml.load(initialState));
 
   return (
     <GameContext.Provider value={{ state, dispatch }}>

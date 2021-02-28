@@ -1,0 +1,6 @@
+label: Inn
+money: +8
+stats:
+  constitution: +1
+  stress: +1
+introduction: Introduction to the job

@@ -1,19 +1,15 @@
 import yaml from "js-yaml";
+
 import Clock from "../components/ui/Clock";
 import Button from "../components/ui/Button";
-import { useGameState } from "../hooks/useGameState";
+
 import { useStateMachine } from "../hooks/useStateMachine";
 
 import testDialogue from "../data/test-dialogue.yaml";
+import testJob from "../data/test-job.yaml";
 
 const ManagementScene = ({ changeScene, openSubScene }) => {
-  const {
-    currentState,
-    changeState,
-    onStateEnter,
-    onStateExit
-  } = useStateMachine("idle");
-  const { state, dispatch } = useGameState();
+  const { currentState, changeState } = useStateMachine("idle");
 
   const SceneElements = function () {
     switch (currentState) {
@@ -31,22 +27,21 @@ const ManagementScene = ({ changeScene, openSubScene }) => {
             >
               Chat
             </Button>
-            <Button
-              onClick={(e) =>
-                changeScene("AdventureScene", {
-                  onOpen: () => console.log("opening adventure scene...")
-                })
-              }
-            >
-              Adventure
+            <Button onClick={(e) => openSubScene("StatsSubScene")}>
+              Stats
             </Button>
           </>
         );
       case "select_work":
         return (
           <>
-            <Button onClick={(e) => dispatch({ type: "increment_money" })}>
-              Something
+            <Button
+              onClick={(e) => {
+                openSubScene("WorkSubScene", { job: yaml.load(testJob) });
+                changeState("idle");
+              }}
+            >
+              Work
             </Button>
             <Button onClick={(e) => changeState("idle")}>Back</Button>
           </>

@@ -1,7 +1,4 @@
-import { isEmpty } from "lodash";
-import DialogueParser from "../components/logic/DialogueParser";
-import Button from "../components/ui/Button";
-import MessageBox from "../components/ui/MessageBox";
+import Dialogue from "../components/logic/Dialogue";
 import { useLifecycle } from "../hooks/useLifecycle";
 
 const ChatSubScene = ({ dialogue, close }) => {
@@ -12,22 +9,7 @@ const ChatSubScene = ({ dialogue, close }) => {
 
   return (
     <div className="flex flex-col">
-      <DialogueParser
-        dialogue={dialogue}
-        onEnd={() => close()}
-        render={({ text, advance, choices }) => (
-          <>
-            <MessageBox onClick={advance} clickable={isEmpty(choices)}>
-              {text}
-            </MessageBox>
-            {choices.map((choice) => (
-              <Button key={choice.key} onClick={choice.onPicked}>
-                {choice.text}
-              </Button>
-            ))}
-          </>
-        )}
-      />
+      <Dialogue dialogue={dialogue} onEnd={close} />
     </div>
   );
 };
