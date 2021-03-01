@@ -7,4 +7,5 @@
 
 * {
   font-family: "MS Gothic", Menlo, sans-serif;
+  user-select: none;
 }

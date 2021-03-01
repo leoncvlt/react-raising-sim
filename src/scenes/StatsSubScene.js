@@ -2,7 +2,7 @@ import Button from "../components/ui/Button";
 import Stat from "../components/ui/Stat";
 import { useGameState } from "../hooks/useGameState";
 
-export const StatsSubScene = ({ close }) => {
+const StatsSubScene = ({ close }) => {
   const { state } = useGameState();
   return (
     <div className="flex flex-col">
@@ -13,3 +13,5 @@ export const StatsSubScene = ({ close }) => {
     </div>
   );
 };
+
+export default StatsSubScene;

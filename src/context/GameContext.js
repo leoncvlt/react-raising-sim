@@ -17,6 +17,19 @@ const reducer = (state, action) => {
             state.stats[action.payload.stat] + action.payload.value
         }
       };
+    case "DO_WORK": {
+      const { success, job } = action.payload;
+      const { stats, pay } = job;
+      const newStats = Object.keys(stats).reduce((total, stat) => {
+        total[stat] = state.stats[stat] + stats[stat];
+        return total;
+      }, {});
+      return {
+        ...state,
+        money: success ? state.money + pay : state.money,
+        stats: { ...state.stats, ...newStats }
+      };
+    }
     default:
       throw new Error("Unknown reducer action");
   }

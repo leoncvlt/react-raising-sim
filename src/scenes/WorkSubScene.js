@@ -1,76 +1,90 @@
 import Dialogue from "../components/logic/Dialogue";
+import MessageBox from "../components/ui/MessageBox";
+import Stat from "../components/ui/Stat";
+
 import { useStateMachine } from "../hooks/useStateMachine";
 import { useGameState } from "../hooks/useGameState";
-
-import { useEffect, useState } from "react";
-import MessageBox from "../components/ui/MessageBox";
 import { useTask } from "../hooks/useTask";
-import Stat from "../components/ui/Stat";
 
 const WorkSubScene = ({ job, close }) => {
   const { dispatch } = useGameState();
 
-  const {
-    currentState: sceneState,
-    changeState,
-    onStateEnter
-  } = useStateMachine("introduction");
+  const { state: sceneState, changeState, onStateEnter } = useStateMachine(
+    WorkSubScene.STATES.Introduction
+  );
 
-  const { currentRound, startTask } = useTask({
-    rounds: 7,
+  const { taskResults, startTask } = useTask({
+    rounds: job.rounds,
     interval: 500,
-    onTask: (total) => {
-      dispatch({ type: "CHANGE_MONEY", payload: { value: job.money } });
-      total["money"] = total["money"] + job.money || job.money;
-      Object.keys(job.stats).forEach((stat) => {
-        dispatch({
-          type: "CHANGE_STAT",
-          payload: { stat, value: job.stats[stat] }
-        });
-        total[stat] = total[stat] + job.stats[stat] || job.stats[stat];
-      });
+    onTask: () => {
+      const success = Math.round(Math.random()) === 0;
+      dispatch({ type: "DO_WORK", payload: { success, job } });
+      return {
+        success,
+        pay: success ? job.pay : 0
+      };
     },
-    onDone: (total) => {
-      changeState("finished");
+    onDone: (results) => {
+      const totalPay = taskResults.reduce((total, r) => total + r.pay, 0);
+      const bonus = results.every((r) => r.success)
+        ? Math.floor(totalPay * 0.5)
+        : 0;
+      if (bonus) {
+        dispatch({ type: "CHANGE_MONEY", payload: { value: bonus } });
+      }
+      changeState(WorkSubScene.STATES.Finished, { totalPay, bonus });
     }
   });
 
-  onStateEnter("working", () => startTask());
+  onStateEnter(WorkSubScene.STATES.Working, () => startTask());
 
-  const SceneElements = ({ currentRound, changeState }) => {
-    switch (sceneState) {
-      case "introduction":
+  const SceneElements = ({ taskResults, changeState }) => {
+    switch (sceneState.name) {
+      case WorkSubScene.STATES.Introduction:
         return (
           <Dialogue
             dialogue={{ start: [job.introduction] }}
-            onEnd={() => changeState("working")}
+            onEnd={() => changeState(WorkSubScene.STATES.Working)}
           />
         );
-      case "working":
+      case WorkSubScene.STATES.Working:
         return (
-          <div className="flex flex-col">
-            {Object.keys(job.stats).map((stat) => (
-              <Stat key={stat} stat={stat} />
-            ))}
-            <br />
-            <MessageBox>Working... ({currentRound + 1} / 7)</MessageBox>
-          </div>
+          taskResults.length > 0 && (
+            <div className="flex flex-col">
+              {Object.keys(job.stats).map((stat) => (
+                <Stat key={stat} stat={stat} />
+              ))}
+              <br />
+              <MessageBox>
+                Working... ({taskResults.length} / 7)
+                <br />
+                {taskResults[taskResults.length - 1].success
+                  ? "Today went very well!"
+                  : "Today didn't go so well..."}
+              </MessageBox>
+            </div>
+          )
         );
-      case "finished":
-        return (
-          <Dialogue
-            dialogue={{ start: ["Thanks for your hard work!"] }}
-            onEnd={close}
-          />
-        );
+      case WorkSubScene.STATES.Finished:
+        const { bonus, totalPay } = sceneState.props;
+        const message =
+          `Work is finished. You earned ${totalPay} gold.` +
+          (bonus
+            ? `\nYou did very well today, so you earn a bonus of ${bonus} gold as well!`
+            : ``);
+        return <Dialogue dialogue={{ start: [message] }} onEnd={close} />;
       default:
-        return <></>;
+        return null;
     }
   };
 
-  return (
-    <SceneElements currentRound={currentRound} changeState={changeState} />
-  );
+  return <SceneElements taskResults={taskResults} changeState={changeState} />;
+};
+
+WorkSubScene.STATES = {
+  Introduction: "introduction",
+  Working: "working",
+  Finished: "finished"
 };
 
 export default WorkSubScene;

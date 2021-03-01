@@ -6,7 +6,7 @@ const MessageBox = ({ onClick, clickable, children }) => (
     }`}
     style={{ position: "relative" }}
   >
-    <p>{children}</p>
+    <p className="whitespace-pre-line">{children}</p>
     {clickable && (
       <div
         style={{

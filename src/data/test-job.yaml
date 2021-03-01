@@ -1,6 +1,7 @@
 label: Inn
-money: +8
+rounds: 7
+pay: 8
 stats:
-  constitution: +1
-  stress: +1
-introduction: Introduction to the job
+  constitution: 1
+  stress: 1
+introduction: Today you will be working at the inn.

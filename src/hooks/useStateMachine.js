@@ -1,41 +1,45 @@
 import { useState } from "react";
 
-export const useStateMachine = (initialState) => {
-  const [currentState, setCurrentState] = useState(initialState);
+export const useStateMachine = (initialState, initialProps) => {
+  const [state, setState] = useState({
+    name: initialState,
+    props: initialProps
+  });
+
   const _onStateEnter = {};
   const _onStateExit = {};
 
-  const changeState = (newState, props) => {
-    setCurrentState((prevState) => {
-      if (prevState && prevState in _onStateExit) {
+  const changeState = (name, props = {}) => {
+    setState((prevState) => {
+      if (prevState.name && prevState.name in _onStateExit) {
         for (const callback of _onStateExit[prevState]) {
-          callback({ from: prevState, to: newState, ...props });
+          callback({ from: prevState.name, to: name, ...props });
         }
       }
 
-      if (newState in _onStateEnter) {
-        for (const callback of _onStateEnter[newState]) {
-          callback({ from: prevState, to: newState, ...props });
+      if (name in _onStateEnter) {
+        for (const callback of _onStateEnter[name]) {
+          callback({ from: prevState.name, to: name, ...props });
         }
       }
 
-      return newState;
+      return { name, props };
     });
   };
 
-  const onStateEnter = (state, callback) => {
-    if (_onStateEnter[state] == null || _onStateEnter.length === 0) {
-      _onStateEnter[state] = [];
+  const onStateEnter = (name, callback) => {
+    if (_onStateEnter[name] == null || _onStateEnter.length === 0) {
+      _onStateEnter[name] = [];
     }
-    _onStateEnter[state].push(callback);
+    _onStateEnter[name].push(callback);
   };
 
-  const onStateExit = (state, callback) => {
-    if (_onStateExit[state] == null || _onStateExit.length === 0) {
-      _onStateExit[state] = [];
+  const onStateExit = (name, callback) => {
+    if (_onStateExit[name] == null || _onStateExit.length === 0) {
+      _onStateExit[name] = [];
     }
-    _onStateExit[state].push(callback);
+    _onStateExit[name].push(callback);
   };
 
-  return { currentState, changeState, onStateEnter, onStateExit };
+  return { state, changeState, onStateEnter, onStateExit };
 };

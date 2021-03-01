@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import AdventureScene from "../../scenes/AdventureScene";
 import ChatSubScene from "../../scenes/ChatSubScene";
 import ManagementScene from "../../scenes/ManagementScene";
-import { StatsSubScene } from "../../scenes/StatsSubScene";
+import StatsSubScene from "../../scenes/StatsSubScene";
 import WorkSubScene from "../../scenes/WorkSubScene";
 
 const SCENES = {

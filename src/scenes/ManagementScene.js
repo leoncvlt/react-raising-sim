@@ -9,10 +9,10 @@ import testDialogue from "../data/test-dialogue.yaml";
 import testJob from "../data/test-job.yaml";
 
 const ManagementScene = ({ changeScene, openSubScene }) => {
-  const { currentState, changeState } = useStateMachine("idle");
+  const { state: sceneState, changeState } = useStateMachine("idle");
 
-  const SceneElements = function () {
-    switch (currentState) {
+  const SceneElements = () => {
+    switch (sceneState.name) {
       case "idle":
         return (
           <>
